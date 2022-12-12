@@ -6,15 +6,13 @@ function clickElement(e, checkVisibility = true) {
   if (!checkVisibility || e.offsetParent) e.click();
 }
 
-function clickAll(selector, parent = document) {
+function clickAll(selector, parent = document, delay = 1000) {
   const elements = [...parent.querySelectorAll(selector)];
-  elements.forEach(e => 
-    // wait 60 seconds between each "click", to ensure that the site correctly registers that it has been completed 
-    // (it seems that quizzes and polls running at the same time do not get registered as completed)
+  elements.forEach(e => {
     setTimeout(function() {
-		        clickElement(e, true);
-		    }, 180000)
-	    );
+       clickElement(e, true);
+    }, delay);
+  });
 }
 
 // scope this in a function so we can inject this script multiple times
@@ -23,12 +21,11 @@ function clickAll(selector, parent = document) {
   // This is only reproducible in Firefox as far as I'm aware.
   setTimeout(() => {
     const cards = [...document.querySelectorAll('mee-card')];
-    if (cards.length) {
-      cards.forEach(card => {
-        if (card.querySelector('.mee-icon-AddMedium')) {
-          clickAll('a.ds-card-sec', card);
-        }
-      });
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      if (card.querySelector('.mee-icon-AddMedium')) {
+        clickAll('a.ds-card-sec', card, (i * 30000) + 5000);
+      }
     }
-  }, 0);
+  }, 5000);
 })();

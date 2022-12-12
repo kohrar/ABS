@@ -187,7 +187,7 @@ document.getElementById('open-reward-tasks').addEventListener('click', async () 
       url: constants.REWARDS_URL,
     }, () => {
       async function listener(updatedTabId, info, updatedTab) {
-        if (tab.id === updatedTabId && info.status === 'complete' && updatedTab.url.includes(constants.REWARDS_URL)) {
+        if (tab.id === updatedTabId && info.status === 'complete') {
           await openRewardTasks();
           chrome.tabs.onUpdated.removeListener(listener);
         }
