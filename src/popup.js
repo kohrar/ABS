@@ -5,7 +5,13 @@ const randomSearchesWrapper = document.getElementById('random-search-input-wrapp
 
 const iterationCount1 = document.getElementById('iteration-count-1');
 const iterationCount2 = document.getElementById('iteration-count-2');
+const iterationTimer = document.getElementById('iteration-timer');
 const iterationCountWrapper = document.getElementById('iteration-count-wrapper');
+
+
+let timer;
+let timerSecs = 0;
+
 
 // if we are spoofing desktop searches, show a count labelled 'desktop'. same for mobile.
 // if we are not spoofing anything, then just display an unlabelled count.
@@ -41,6 +47,11 @@ function clearCountDisplayText() {
   iterationCountWrapper.style = 'display: none;';
 }
 
+function updateTimer() {
+    iterationTimer.innerText = "Next search in " + timerSecs + " seconds";
+}
+
+
 port.onMessage.addListener(msg => {
   switch(msg.type) {
     case constants.MESSAGE_TYPES.UPDATE_SEARCH_COUNTS: {
@@ -49,11 +60,26 @@ port.onMessage.addListener(msg => {
     }
     case constants.MESSAGE_TYPES.CLEAR_SEARCH_COUNTS: {
       clearCountDisplayText();
+    clearInterval(timer);
       break;
     }
+    case constants.MESSAGE_TYPES.UPDATE_SEARCH_TIMER:
+        timerSecs = msg.timer;
+        clearInterval(timer);
+        timer = setInterval(function() {
+            if (timerSecs <= 0) {
+                clearInterval(timer);
+            } else {
+                timerSecs--;
+                updateTimer();
+            }
+        }, 1000);
+        break;
+
     default: break;
   }
 });
+
 chrome.runtime.sendMessage({
   type: constants.MESSAGE_TYPES.GET_SEARCH_COUNTS,
 });
@@ -151,6 +177,7 @@ const changeBindings = [
   { id: 'reset', eventType: 'click', fn: reset },
   { id: 'open-options', eventType: 'click', fn: openOptions },
   { id: 'stop', eventType: 'click', fn: stopSearches },
+  { id: 'search', eventType: 'click', fn: startSearches },
 ];
 
 changeBindings.forEach(({ id, eventType, fn = saveChanges }) => {
@@ -168,7 +195,6 @@ function stopSearches() {
 chrome.commands.onCommand.addListener(command => {
   if (command === 'start-searches') startSearches();
 });
-document.getElementById('search').addEventListener('click', startSearches);
 
 document.getElementById('open-reward-tasks').addEventListener('click', async () => {
   function openRewardTasks() {

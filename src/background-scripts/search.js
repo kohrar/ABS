@@ -156,6 +156,14 @@ async function searchLoop(currentSearchingTabId) {
     } else {
       // cannot use chrome.alarms since an alarm will fire, at most, every one minute
       searchTimeout = setTimeout(() => searchLoop(currentSearchingTabId), currentDelay * 1000);
+
+  sendMessage({
+    type: constants.MESSAGE_TYPES.UPDATE_SEARCH_TIMER,
+    timer: currentDelay,
+  });
+
+
+
     }
   } catch (err) {
     console.error(err.message);
