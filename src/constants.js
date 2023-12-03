@@ -18,7 +18,7 @@ const constants = Object.freeze({
     delay: 15,
     autoClick: true,
     randomGuesses: true,
-    randomSearch: false,
+    randomSearch: true,
     randomSearchDelayMin: 15,
     randomSearchDelayMax: 60,
     randomSearchIterationsMin: 30,
@@ -42,6 +42,7 @@ const constants = Object.freeze({
     CLEAR_SEARCH_COUNTS: 4, // background script => popup
     CORRECT_ANSWER_RECEIVED: 5, // window-variable-grabber script => content script
     OPEN_URL_IN_BACKGROUND: 6, // window-variable-grabber script => content script => background script
+    UPDATE_SEARCH_TIMER: 7, // 
   }),
   REWARDS_URL: 'https://rewards.bing.com/?redref=amc',
   DAILY_TRENDS_API: 'https://trends.google.com/trends/api/dailytrends?geo=US',
