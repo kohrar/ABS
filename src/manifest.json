@@ -20,6 +20,7 @@
     "js": [
       "constants.js",
       "content-scripts/script-injector.js",
+      "content-scripts/open-reward-tasks.js",
       "content-scripts/window-open-injection/injector.js"
     ]
   }],
