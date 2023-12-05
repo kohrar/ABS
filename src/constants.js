@@ -24,7 +24,6 @@ const constants = Object.freeze({
     randomSearchIterationsMin: 30,
     randomSearchIterationsMax: 42,
     randomLettersSearch: false,
-    blitzSearch: false,
     platformSpoofing: 'desktop-and-mobile',
     customQueries: '',
     searchWithCustomQueries: false,

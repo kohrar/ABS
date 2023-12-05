@@ -88,7 +88,6 @@ const preferenceBindings = [
   { id: 'random-guesses', elementKey: 'checked', preferenceKey: 'randomGuesses' },
   { id: 'platform-spoofing', elementKey: 'value', preferenceKey: 'platformSpoofing' },
   { id: 'random-search', elementKey: 'checked', preferenceKey: 'randomSearch' },
-  { id: 'blitz-search', elementKey: 'checked', preferenceKey: 'blitzSearch' },
 ];
 
 getStorage(
@@ -152,7 +151,6 @@ const changeBindings = [
   { id: 'auto-click', eventType: 'change' },
   { id: 'random-guesses', eventType: 'change' },
   { id: 'platform-spoofing', eventType: 'change' },
-  { id: 'blitz-search', eventType: 'change' },
   { id: 'reset', eventType: 'click', fn: reset },
   { id: 'open-options', eventType: 'click', fn: openOptions },
   { id: 'stop', eventType: 'click', fn: stopSearches },

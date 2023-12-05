@@ -86,15 +86,6 @@ async function search(isMobile) {
       // we expect an error if there is the tab is closed, for example
       if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
 
-      if (prefs.blitzSearch) {
-        // arbitrarily wait 500ms on the last mobile search before resolving
-        // so that there is a delay before disabling the mobile spoofing
-        // (otherwise the last search will occur after the spoofing is disabled)
-        const delay = (mobileCount === desktopCount && desktopCount > 0) ? 500 : 0;
-        setTimeout(resolve, delay);
-        return;
-      }
-
       function listener(updatedTabId, info) {
         if (currentSearchingTabId === updatedTabId && info.status === 'complete') {
           resolve();
