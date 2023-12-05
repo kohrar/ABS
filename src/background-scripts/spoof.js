@@ -9,6 +9,7 @@ let doMobileSearches = false;
 function spoof(value) {
   spoofUserAgent = value;
 }
+
 function mobileSpoof(value) {
   doMobileSearches = value;
 }

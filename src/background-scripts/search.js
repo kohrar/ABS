@@ -4,6 +4,9 @@ let searchTimeout;
 let searchTimer;
 let searchTimerSecs = 0;
 
+// store it in an object because eventually, we will be storing this information in local storage
+// and once that happens, it will be an object as well
+let currentSearchSettings = {};
 
 function sendMessage(msg) {
   if (activePort) activePort.postMessage(msg);
@@ -17,18 +20,6 @@ function setBadgeReminderWithCount(count) {
 function updateLastSearch() {
   setStorage('lastSearch', Date.now());
 }
-
-// store it in an object because eventually, we will be storing this information in local storage
-// and once that happens, it will be an object as well
-let currentSearchSettings = {
-  // currentSearchingTabId,
-  // platformSpoofing,
-  // desktopIterations,
-  // mobileIterations,
-  // overallCount,
-  // desktopCount,
-  // mobileCount,
-};
 
 function stopSearches() {
   currentSearchSettings = {};
@@ -131,6 +122,7 @@ async function searchLoop(currentSearchingTabId) {
     mobileCount,
   } = currentSearchSettings;
 
+  // next search delay time
   searchTimerSecs = Number(prefs.delay);
   if (prefs.randomSearch) {
     const minDelay = Number(prefs.randomSearchDelayMin);
@@ -139,6 +131,8 @@ async function searchLoop(currentSearchingTabId) {
   }
 
   try {
+    // are we doing mobile searches?
+    // If we do both, we'll do mobile after desktopIteration exceeds our overall search count.
     const isMobile = platformSpoofing === 'mobile-only' || (platformSpoofing === 'desktop-and-mobile' && overallCount >= desktopIterations);
     await search(isMobile);
 
@@ -176,7 +170,6 @@ async function searchLoop(currentSearchingTabId) {
             setSearchCounts();
         }, 1000);
 
-
     }
   } catch (err) {
     console.error(err.message);
@@ -196,24 +189,16 @@ async function startSearches(tabId) {
   const { platformSpoofing } = prefs;
   const minInterations = Number(prefs.randomSearchIterationsMin);
   const maxIterations = Number(prefs.randomSearchIterationsMax);
+
+  // get search iterations
   let desktopIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.desktopIterations);
   let mobileIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.mobileIterations);
 
-  // send messages over the port to initiate spoofing based on the preference
   if (platformSpoofing === 'none' || !platformSpoofing) {
-    spoof(false);
-    mobileSpoof(false);
     mobileIterations = 0;
-  } else if (platformSpoofing === 'desktop-and-mobile') {
-    spoof(true);
-    mobileSpoof(false);
   } else if (platformSpoofing === 'desktop-only') {
-    spoof(true);
-    mobileSpoof(false);
     mobileIterations = 0;
   } else if (platformSpoofing === 'mobile-only') {
-    spoof(true);
-    mobileSpoof(true);
     desktopIterations = 0;
   }
 
