@@ -185,7 +185,9 @@ async function startSearches(tabId) {
   let desktopIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.desktopIterations);
   let mobileIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.mobileIterations);
 
+  spoof(true);
   if (platformSpoofing === 'none' || !platformSpoofing) {
+    spoof(false);
     mobileIterations = 0;
   } else if (platformSpoofing === 'desktop-only') {
     mobileIterations = 0;
