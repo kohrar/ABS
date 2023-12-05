@@ -42,12 +42,10 @@ const constants = Object.freeze({
     CLEAR_SEARCH_COUNTS: 4, // background script => popup
     CORRECT_ANSWER_RECEIVED: 5, // window-variable-grabber script => content script
     OPEN_URL_IN_BACKGROUND: 6, // window-variable-grabber script => content script => background script
-    UPDATE_SEARCH_TIMER: 7, // 
   }),
   REWARDS_URL: 'https://rewards.bing.com/?redref=amc',
   DAILY_TRENDS_API: 'https://trends.google.com/trends/api/dailytrends?geo=US',
   NUM_DAILY_TREND_FETCHES: 4,
-  // TODO: add more mobile user agents
   MOBILE_USER_AGENTS: Object.freeze([
   'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36 EdgA/119.0.0.0',
   ]),

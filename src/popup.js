@@ -9,10 +9,6 @@ const iterationTimer = document.getElementById('iteration-timer');
 const iterationCountWrapper = document.getElementById('iteration-count-wrapper');
 
 
-let timer;
-let timerSecs = 0;
-
-
 // if we are spoofing desktop searches, show a count labelled 'desktop'. same for mobile.
 // if we are not spoofing anything, then just display an unlabelled count.
 function setCountDisplayText({
@@ -22,6 +18,7 @@ function setCountDisplayText({
   containsMobile,
   desktopRemaining,
   mobileRemaining,
+  searchTimerSecs,
 }) {
   if (numIterations === overallCount) {
     clearCountDisplayText();
@@ -39,6 +36,7 @@ function setCountDisplayText({
   if (!containsDesktop && !containsMobile) {
     iterationCount1.innerText = numIterations - overallCount;
   }
+  iterationTimer.innerText = "Next search in " + searchTimerSecs + " seconds";
 }
 
 function clearCountDisplayText() {
@@ -46,11 +44,6 @@ function clearCountDisplayText() {
   iterationCount2.innerText = '';
   iterationCountWrapper.style = 'display: none;';
 }
-
-function updateTimer() {
-    iterationTimer.innerText = "Next search in " + timerSecs + " seconds";
-}
-
 
 port.onMessage.addListener(msg => {
   switch(msg.type) {
@@ -60,22 +53,8 @@ port.onMessage.addListener(msg => {
     }
     case constants.MESSAGE_TYPES.CLEAR_SEARCH_COUNTS: {
       clearCountDisplayText();
-    clearInterval(timer);
       break;
     }
-    case constants.MESSAGE_TYPES.UPDATE_SEARCH_TIMER:
-        timerSecs = msg.timer;
-        clearInterval(timer);
-        timer = setInterval(function() {
-            if (timerSecs <= 0) {
-                clearInterval(timer);
-            } else {
-                timerSecs--;
-                updateTimer();
-            }
-        }, 1000);
-        break;
-
     default: break;
   }
 });

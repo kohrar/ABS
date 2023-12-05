@@ -1,3 +1,10 @@
+let searchTimeout;
+
+// keeps track of how many seconds until next searhc
+let searchTimer;
+let searchTimerSecs = 0;
+
+
 function sendMessage(msg) {
   if (activePort) activePort.postMessage(msg);
 }
@@ -22,11 +29,11 @@ let currentSearchSettings = {
   // desktopCount,
   // mobileCount,
 };
-let searchTimeout;
 
 function stopSearches() {
   currentSearchSettings = {};
   clearTimeout(searchTimeout);
+  clearInterval(searchTimer);
   clearBadge();
   sendMessage({ type: constants.MESSAGE_TYPES.CLEAR_SEARCH_COUNTS });
   spoof(false);
@@ -61,6 +68,7 @@ function setSearchCounts() {
     containsMobile,
     desktopRemaining,
     mobileRemaining,
+    searchTimerSecs,
   });
 }
 
@@ -123,11 +131,11 @@ async function searchLoop(currentSearchingTabId) {
     mobileCount,
   } = currentSearchSettings;
 
-  let currentDelay = Number(prefs.delay);
+  searchTimerSecs = Number(prefs.delay);
   if (prefs.randomSearch) {
     const minDelay = Number(prefs.randomSearchDelayMin);
     const maxDelay = Number(prefs.randomSearchDelayMax);
-    currentDelay = random(minDelay, maxDelay);
+    searchTimerSecs = random(minDelay, maxDelay);
   }
 
   try {
@@ -155,13 +163,18 @@ async function searchLoop(currentSearchingTabId) {
       stopSearches();
     } else {
       // cannot use chrome.alarms since an alarm will fire, at most, every one minute
-      searchTimeout = setTimeout(() => searchLoop(currentSearchingTabId), currentDelay * 1000);
+      searchTimeout = setTimeout(() => searchLoop(currentSearchingTabId), searchTimerSecs * 1000);
 
-  sendMessage({
-    type: constants.MESSAGE_TYPES.UPDATE_SEARCH_TIMER,
-    timer: currentDelay,
-  });
-
+      // update the search count values every second
+      clearInterval(searchTimer);
+      searchTimer = setInterval(function() {
+            if (searchTimerSecs <= 0) {
+                clearInterval(searchTimer);
+            } else {
+                searchTimerSecs--;
+            }
+            setSearchCounts();
+        }, 1000);
 
 
     }

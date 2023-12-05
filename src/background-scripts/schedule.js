@@ -1,3 +1,7 @@
+
+/**
+ * Starts searches in a new tab. Triggered by chrome alarm
+ */
 function startSearchesInNewTab() {
   chrome.tabs.create({ active: false }, tab => {
     startSearches(tab.id);
