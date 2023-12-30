@@ -63,6 +63,19 @@ function setSearchCounts() {
   });
 }
 
+
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+}
+
 /**
  * Actually redirects to perform search query.
  */
@@ -77,11 +90,14 @@ async function search(isMobile) {
   } = currentSearchSettings;
 
   if (isMobile && mobileCount === 0) mobileSpoof(true);
+  hash = generateRandomString(32); // randomized refig hash, not sure what it's for
 
   return new Promise(async (resolve, reject) => {
     const query = await getSearchQuery();
     chrome.tabs.update(currentSearchingTabId, {
-      url: `https://bing.com/search?q=${query}&qs=n&form=QBRE&sp=-1&ghc=1&lq=0&pg=${query}&ghsh=0&ghacc=0`,
+      url: isMobile 
+                ? `https://www.bing.com/search?q=${query}&setmkt=en-US&PC=EMMX01&form=L2MT2E&scope=web`
+                : `https://www.bing.com/search?q=${query}&qs=n&form=AWRE`,
     }, () => {
       // we expect an error if there is the tab is closed, for example
       if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);

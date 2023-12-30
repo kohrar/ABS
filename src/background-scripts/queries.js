@@ -52,13 +52,18 @@ async function fetchDailyTrendQueries() {
           })
       }),
     );
+
+    // get a list of topics
     dailyTrendQueries = results.map(handleResult).flat();
+
     setStorage('lastDailyTrendFetch', Date.now());
     setStorage('dailyTrendQueries', dailyTrendQueries);
+
     // fetch again in 1 day
     chrome.alarms.create(constants.ALARMS.FETCH_DAILY_TRENDS, {
       periodInMinutes: constants.ONE_DAY_MINS,
     });
+
   } catch (err) {
     // log the error, but do nothing and default to the hardcoded queries
     console.error(err);
@@ -101,6 +106,7 @@ function getRandomLetters() {
 async function getSearchQuery() {
   await prefsLoaded;
 
+  // explicitly use random letters.
   if (prefs.randomLettersSearch) return getRandomLetters();
 
   // try using an available query. if there are none, just fallback to the hardcoded queries
@@ -110,8 +116,10 @@ async function getSearchQuery() {
     return query;
   }
 
+  // If we disabled templates, we have to use random letters
   if (!prefs.searchWithTemplates) return getRandomLetters();
 
+  // generate queries using the template. Replace $1, $2, variables as needed
   const queryTemplate = getRandomElement(queryTemplates);
   const variables = queryTemplate.template.match(/(\$\d+)/g); // variables are $1, $2, ... where the digit is the ID of the variable
   const query = variables.reduce((acc, variable, i) => {

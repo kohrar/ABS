@@ -18,9 +18,14 @@ chrome.webRequest.onBeforeSendHeaders.addListener(details => {
   const { requestHeaders } = details;
   requestHeaders.forEach(header => {
     if (header.name === 'User-Agent' && spoofUserAgent) {
-      if (doMobileSearches) header.value = mobileUserAgent;
-      else header.value = edgeUserAgent;
+      header.value = doMobileSearches ? mobileUserAgent : edgeUserAgent;
     }
+   //  if (header.name === 'Sec-Ch-Ua-Full-Version-List' && spoofUserAgent) {
+   //    if ( ! doMobileSearches) header.value='"Chromium";v="120.0.6099.71", "Microsoft Edge";v="120.0.2210.61", "Not=A?Brand";v="8.0.0.0"'
+   //  }
+   //  if (header.name === 'Sec-Ch-Ua' && spoofUserAgent) {
+   //    if ( ! doMobileSearches) header.value='"Chromium";v="120", "Microsoft Edge";v="120", "Not=A?Brand";v="8"'
+   //  }
   });
   return { requestHeaders };
 }, {

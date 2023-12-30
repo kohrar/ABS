@@ -4,36 +4,84 @@ const queryTemplates = [
     types: ['animal'],
   },
   {
+    template: '$1',
+    types: ['topics'],
+  },
+  {
+    template: 'introduction to $1',
+    types: ['topics'],
+  },
+  {
+    template: '$1 in detail',
+    types: ['topics'],
+  },
+  {
+    template: 'jobs related to $1',
+    types: ['topics'],
+  },
+  {
     template: '$1 net worth',
     types: ['person'],
   },
   {
-    template: 'who is $1',
+    template: '$1 companies',
     types: ['person'],
   },
   {
-    template: 'weight of average $1',
-    types: ['animal'],
-  },
-  {
-    template: 'picture of $1',
-    types: ['animal'],
-  },
-  {
-    template: 'picture of $1',
+    template: 'Who is $1',
     types: ['person'],
   },
   {
-    template: '$1 $2',
+    template: '$1 wiki',
+    types: ['person'],
+  },
+  {
+    template: '$1 wiki',
+    types: ['animal'],
+  },
+  {
+    template: 'cartoon picture of $1',
+    types: ['animal'],
+  },
+  {
+    template: 'drawing of $1',
+    types: ['person'],
+  },
+  {
+    template: '$1 on $2',
     types: ['person', 'socialMedia'],
   },
   {
-    template: '$1 calories',
+    template: 'nutrition $1 vs $2',
+    types: ['food', 'food'],
+  },
+  {
+    template: 'calories in a $1',
     types: ['food'],
   },
   {
-    template: 'recipe with $1',
+    template: 'recipe using $1',
     types: ['food'],
+  },
+  {
+    template: 'healthy $1',
+    types: ['food'],
+  },
+  {
+    template: 'flights to $1',
+    types: ['locations'],
+  },
+  {
+    template: 'history of $1',
+    types: ['locations'],
+  },
+  {
+    template: 'travel guide to $1',
+    types: ['locations'],
+  },
+  {
+    template: '$1 wiki',
+    types: ['locations'],
   },
 ];
 
@@ -42,4 +90,6 @@ const types = {
   person: people,
   food: food,
   socialMedia: socialMedias,
+  locations: locations,
+  topics: topics,
 };
