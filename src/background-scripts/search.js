@@ -27,8 +27,6 @@ function stopSearches() {
   clearInterval(searchTimer);
   clearBadge();
   sendMessage({ type: constants.MESSAGE_TYPES.CLEAR_SEARCH_COUNTS });
-  spoof(false);
-  mobileSpoof(false);
 }
 
 function setSearchCounts() {
@@ -89,8 +87,7 @@ async function search(isMobile) {
     currentSearchingTabId,
   } = currentSearchSettings;
 
-  if (isMobile && mobileCount === 0) mobileSpoof(true);
-  hash = generateRandomString(32); // randomized refig hash, not sure what it's for
+	mobileSpoof(isMobile);
 
   return new Promise(async (resolve, reject) => {
     const query = await getSearchQuery();
@@ -201,11 +198,7 @@ async function startSearches(tabId) {
   let desktopIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.desktopIterations);
   let mobileIterations = prefs.randomSearch ? random(minInterations, maxIterations) : Number(prefs.mobileIterations);
 
-  spoof(true);
-  if (platformSpoofing === 'none' || !platformSpoofing) {
-    spoof(false);
-    mobileIterations = 0;
-  } else if (platformSpoofing === 'desktop-only') {
+  if (platformSpoofing === 'desktop-only') {
     mobileIterations = 0;
   } else if (platformSpoofing === 'mobile-only') {
     desktopIterations = 0;
